@@ -39,11 +39,16 @@ au CursorHold * checktime
 let g:airline#extensions#branch#enabled = 1
 
 " spacebar key maps
-nnoremap <silent><leader>p :GFiles<CR>
+nnoremap <silent> <c-p> :GFiles<CR>
 nnoremap <silent><leader>f :Rg<CR>
 nnoremap <silent><leader>b :Buffers<CR>
 nnoremap <silent><leader>h :History<CR>
 nnoremap <leader>t :NERDTreeToggle<CR>
+
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
 
 let NERDTreeQuitOnOpen = 1
 
