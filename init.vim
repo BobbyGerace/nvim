@@ -21,9 +21,6 @@ Plug 'neovim/nvim-lspconfig'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'https://tpope.io/vim/sleuth.git'
-
-
 call plug#end()
 
 let mapleader=" "
@@ -32,6 +29,10 @@ colorscheme sonokai
 
 set number
 set smartcase
+set tabstop     =2
+set softtabstop =2
+set shiftwidth  =2
+set expandtab
 
 " checks for when the file changes and updates
 au CursorHold * checktime
@@ -43,12 +44,26 @@ nnoremap <silent> <c-p> :GFiles<CR>
 nnoremap <silent><leader>f :Rg<CR>
 nnoremap <silent><leader>b :Buffers<CR>
 nnoremap <silent><leader>h :History<CR>
-nnoremap <leader>t :NERDTreeToggle<CR>
 
 nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
+nmap <silent><leader>t :call NERDTreeToggleInCurDir()<cr>
+
+function! NERDTreeToggleInCurDir()
+  " If NERDTree is open in the current buffer
+  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+    exe ":NERDTreeClose"
+  else
+    exe ":NERDTreeFind"
+  endif
+endfunction
+
+function! Source()
+    exe ":source ~/.config/nvim/init.vim"
+endfunction
+
 
 let NERDTreeQuitOnOpen = 1
 
@@ -142,10 +157,6 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
