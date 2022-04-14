@@ -28,6 +28,7 @@ let mapleader=" "
 colorscheme sonokai
 
 set number
+set ignorecase
 set smartcase
 set tabstop     =2
 set softtabstop =2
