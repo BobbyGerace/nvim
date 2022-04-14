@@ -40,6 +40,7 @@ set expandtab
 set mouse=a
 
 " checks for when the file changes and updates
+set autoread
 au CursorHold * checktime
 
 " Find files
@@ -74,8 +75,11 @@ nnoremap <silent><leader>wl :wincmd L<CR>
 nmap <silent><leader>tt :NERDTreeToggle<cr>
 " Find current file in tree
 nmap <silent><leader>tf :NERDTreeFind<cr>
+" Reload the file list
+nmap <silent><leader>tr :NERDTreeRefreshRoot<cr>
 
 let NERDTreeQuitOnOpen = 1
+let NERDTreeShowHidden=1
 
 let g:prettier#autoformat = 1
 let g:prettier#autoformat_require_pragma = 0
@@ -83,6 +87,8 @@ let g:prettier#autoformat_require_pragma = 0
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#branch#enabled = 1
 
+" select / deselect all in fzf Rg
+let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all'
 
 " Begin COC stuff
 
