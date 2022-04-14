@@ -3,7 +3,10 @@ call plug#begin('~/.local/share/nvim/plugged')
 " themes
 Plug 'sainnhe/sonokai'
 Plug 'sainnhe/everforest'
-Plug 'dracula/vim'
+Plug 'crusoexia/vim-dracula'
+Plug 'nanotech/jellybeans.vim'
+Plug 'tomasiser/vim-code-dark'
+Plug 'gosukiwi/vim-atom-dark'
 
 " fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -34,42 +37,52 @@ set tabstop     =2
 set softtabstop =2
 set shiftwidth  =2
 set expandtab
+set mouse=a
 
 " checks for when the file changes and updates
 au CursorHold * checktime
 
-let g:airline#extensions#branch#enabled = 1
-
-" spacebar key maps
+" Find files
 nnoremap <silent> <c-p> :GFiles<CR>
+" Search in files
 nnoremap <silent><leader>f :Rg<CR>
+" Open buffers
 nnoremap <silent><leader>b :Buffers<CR>
+" File history
 nnoremap <silent><leader>h :History<CR>
+" Copy to clipboard
+nnoremap <silent><leader>y "*y
+" Paste from clipboard
+nnoremap <silent><leader>p "*p
+" Refresh config 
+nnoremap <silent><leader>r :source $MYVIMRC<CR>
+" Open git status pane
+nnoremap <silent><leader>g :Git<CR>
 
+" Switch to window 
 nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
-nmap <silent><leader>t :call NERDTreeToggleInCurDir()<cr>
+" Swap window
+nnoremap <silent><leader>wk :wincmd K<CR>
+nnoremap <silent><leader>wj :wincmd J<CR>
+nnoremap <silent><leader>wh :wincmd H<CR>
+nnoremap <silent><leader>wl :wincmd L<CR>
 
-function! NERDTreeToggleInCurDir()
-  " If NERDTree is open in the current buffer
-  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
-    exe ":NERDTreeClose"
-  else
-    exe ":NERDTreeFind"
-  endif
-endfunction
-
-function! Source()
-    exe ":source ~/.config/nvim/init.vim"
-endfunction
-
+" Toggle nerd tree
+nmap <silent><leader>tt :NERDTreeToggle<cr>
+" Find current file in tree
+nmap <silent><leader>tf :NERDTreeFind<cr>
 
 let NERDTreeQuitOnOpen = 1
 
 let g:prettier#autoformat = 1
 let g:prettier#autoformat_require_pragma = 0
+
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#branch#enabled = 1
+
 
 " Begin COC stuff
 
@@ -233,7 +246,7 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
