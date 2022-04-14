@@ -48,7 +48,9 @@ nnoremap <silent> <c-p> :GFiles<CR>
 " Search in files
 nnoremap <silent><leader>f :Rg<CR>
 " Open buffers
-nnoremap <silent><leader>b :Buffers<CR>
+nnoremap <silent><leader>l :Buffers<CR>
+" Flip to previous file
+nnoremap <silent><leader>b :b#<CR>
 " File history
 nnoremap <silent><leader>h :History<CR>
 " Copy to clipboard
