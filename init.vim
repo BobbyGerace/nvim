@@ -44,7 +44,8 @@ set autoread
 au CursorHold * checktime
 
 " Find files
-nnoremap <silent> <c-p> :GFiles<CR>
+nnoremap <silent> <c-p> :Files<CR>
+nnoremap <silent><leader>p :GFiles<CR>
 " Search in files
 nnoremap <silent><leader>f :Rg<CR>
 " Open buffers
@@ -56,7 +57,7 @@ nnoremap <silent><leader>h :History<CR>
 " Copy to clipboard
 nnoremap <silent><leader>y "*y
 " Paste from clipboard
-nnoremap <silent><leader>p "*p
+nnoremap <silent><leader>v "*p
 " Refresh config 
 nnoremap <silent><leader>r :source $MYVIMRC<CR>
 " Open git status pane
@@ -85,6 +86,7 @@ let NERDTreeShowHidden=1
 
 let g:prettier#autoformat = 1
 let g:prettier#autoformat_require_pragma = 0
+let g:prettier#quickfix_enabled = 0
 
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#branch#enabled = 1
