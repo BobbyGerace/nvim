@@ -7,12 +7,14 @@ Plug 'crusoexia/vim-dracula'
 Plug 'nanotech/jellybeans.vim'
 Plug 'tomasiser/vim-code-dark'
 Plug 'gosukiwi/vim-atom-dark'
+Plug 'mangeshrex/everblush.vim'
 
 " fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 Plug 'tpope/vim-fugitive'
 
@@ -28,7 +30,8 @@ call plug#end()
 
 let mapleader=" "
 
-colorscheme sonokai
+colorscheme everblush
+let g:airline_theme='deus'
 
 set number
 set ignorecase
