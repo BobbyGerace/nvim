@@ -18,6 +18,8 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'tpope/vim-fugitive'
 
+Plug 'airblade/vim-gitgutter'
+
 Plug 'mitermayer/vim-prettier'
 
 Plug 'scrooloose/nerdtree'
@@ -32,6 +34,18 @@ let mapleader=" "
 
 colorscheme everblush
 let g:airline_theme='deus'
+let g:everblushNR=1
+
+" Fixing some diff related theme stuff
+hi DiffDelete guifg='#e06e6e' guibg='#360b0b'
+hi DiffAdd guifg='#8ccf7e' guibg='#11240d'
+hi DiffChange guifg='#6cd0ca' guibg='#0f312f'
+hi DiffText guifg='#6cd0ca' guibg='#1b5653'
+hi Folded guifg='#c47fd5' guibg='#181f21'
+hi FoldColumn guifg='#c47fd5' guibg='#181f21'
+hi GitGutterAdd guifg='#8ccf7e' 
+hi GitGutterDelete guifg='#e06e6e' 
+hi GitGutterChange guifg='#6cd0ca'
 
 set number
 set ignorecase
@@ -46,8 +60,9 @@ set mouse=a
 set autoread
 au CursorHold * checktime
 
-" Find files
+" Find files in project
 nnoremap <silent> <c-p> :Files<CR>
+" Find files in repo (uses gitignore to filter)
 nnoremap <silent><leader>p :GFiles<CR>
 " Search in files
 nnoremap <silent><leader>f :Rg<CR>
@@ -63,8 +78,14 @@ nnoremap <silent><leader>y "*y
 nnoremap <silent><leader>v "*p
 " Refresh config 
 nnoremap <silent><leader>r :source $MYVIMRC<CR>
-" Open git status pane
-nnoremap <silent><leader>g :Git<CR>
+" View Git status page
+nnoremap <silent><leader>gg :Git<CR>
+" Open changed files preview
+nnoremap <silent><leader>gf :GF?<CR>
+" Open diff of current buffer
+nnoremap <silent><leader>gd :Gdiff<CR>
+" Preview hunk
+nnoremap <silent><leader>gh :GitGutterPreviewHunk<CR>
 
 " Switch to window 
 nmap <silent> <c-k> :wincmd k<CR>
@@ -94,6 +115,11 @@ let g:prettier#quickfix_enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#branch#enabled = 1
 
+let g:gitgutter_preview_win_floating = 1
+let g:gitgutter_sign_removed = '-'
+let g:gitgutter_sign_removed_first_line = '^'
+let g:gitgutter_sign_modified_removed = '~-'
+
 " select / deselect all in fzf Rg
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all'
 
@@ -122,12 +148,12 @@ set shortmess+=c
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("nvim-0.5.0") || has("patch-8.1.1564")
+ if has("nvim-0.5.0") || has("patch-8.1.1564")
   " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
+   set signcolumn=number
+ else
+   set signcolumn=yes
+ endif
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
