@@ -48,16 +48,11 @@ Plug 'neovim/nvim-lspconfig'
 " typescript goodness
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'nvim-lua/plenary.nvim'
-Plug 'windwp/nvim-spectre'
-
-
 call plug#end()
 
 " lua specific stuff
 lua << END
 require('lualine').setup()
-require('spectre').setup()
 require('tabline').setup({
   options = {
     show_tabs_always = true,
@@ -98,19 +93,21 @@ set autoread
 au CursorHold * checktime
 
 " Find files in project
-nnoremap <silent> <c-p> :Files<CR>
-" Find files in repo (uses gitignore to filter)
 nnoremap <silent><leader>p :GFiles<CR>
 " Search in files
-nnoremap <silent><leader>sf :Rg<CR>
-" replace in project
-nnoremap <leader>R <cmd>lua require('spectre').open()<CR>
+nnoremap <silent><leader>f :Rg<CR>
+" replace in project (after getting to quickfix window)
+nnoremap <leader>R :cfdo %s///g \| update<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " replace in current file
-nnoremap <leader>r viw:lua require('spectre').open_file_search()<cr>
+nnoremap <leader>r :%s///g<Left><Left>
+" replace in project with confirm (after getting to quickfix window)
+nnoremap <leader>Rc :cfdo %s///gc \| update<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+" replace in current file with confirm
+nnoremap <leader>rc :%s///gc<Left><Left><Left>
 " Open buffers
-nnoremap <silent><leader>l :Buffers<CR>
+nnoremap <silent><leader>b :Buffers<CR>
 " Flip to previous file
-nnoremap <silent><leader>b :b#<CR>
+nnoremap <silent><leader><tab> :b#<CR>
 " File history
 nnoremap <silent><leader>h :History<CR>
 " Copy to clipboard
@@ -120,7 +117,7 @@ nnoremap <silent><leader>v "*p
 " View Git status page
 nnoremap <silent><leader>gg :Git<CR>
 " Open changed files preview
-nnoremap <silent><leader>gf :DiffviewOpen<CR>
+nnoremap <silent><leader>gc :DiffviewOpen<CR>
 " Open diff of current buffer
 nnoremap <silent><leader>gd :Gdiff<CR>
 " Show file history
@@ -129,9 +126,14 @@ nnoremap <silent><leader>gh :DiffviewFileHistory<CR>
 nnoremap <silent><leader>gp :GitGutterPreviewHunk<CR>
 " Close tab
 nnoremap <silent><leader>qt :tabclose<CR>
-" Command to replace all in quickfix
-
-nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+" Use K to show documentation in preview window.
+nnoremap <silent><leader>d :call <SID>show_documentation()<CR>
+" show diagnostics
+nnoremap <silent><leader>e :<C-u>CocList diagnostics<cr>
+" show commands
+nnoremap <silent><leader>c :<C-u>CocList commands<cr>
+" Show coc commands.
+nnoremap <silent><nowait> <space>c  
 
 " Switch to window 
 nmap <silent> <c-k> :wincmd k<CR>
@@ -251,9 +253,6 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -278,27 +277,6 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
 " Remap <C-f> and <C-b> for scroll float windows/popups.
 if has('nvim-0.4.0') || has('patch-8.2.0750')
   nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
@@ -309,45 +287,10 @@ if has('nvim-0.4.0') || has('patch-8.2.0750')
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-" nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
