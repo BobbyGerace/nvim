@@ -184,6 +184,19 @@ set sessionoptions+=tabpages,globals " store tabpages and globals in session
 " select / deselect all in fzf Rg
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all'
 
+" use ripgrep as grep tool
+if executable("rg")
+    set grepprg=rg\ --vimgrep\ --no-heading
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+endif
+
+"automatically open quickfix
+augroup quickfix
+    autocmd!
+    autocmd QuickFixCmdPost [^l]* cwindow
+    autocmd QuickFixCmdPost l* lwindow
+augroup END
+
 " Begin COC stuff (pretty much just copy & pasted)
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
