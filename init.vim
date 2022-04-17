@@ -8,45 +8,59 @@ Plug 'nanotech/jellybeans.vim'
 Plug 'tomasiser/vim-code-dark'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'mangeshrex/everblush.vim'
+Plug 'EdenEast/nightfox.nvim'
 
 " fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+" status bar
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+" git stuff
 Plug 'tpope/vim-fugitive'
-
 Plug 'airblade/vim-gitgutter'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'sindrets/diffview.nvim'
 
+" commenting lines
+Plug 'chrisbra/vim-commentary'
+
+" lets add a different comment in the same place
+
+" autoformatting
 Plug 'mitermayer/vim-prettier'
 
+" file tree
 Plug 'scrooloose/nerdtree'
 
+" language server
 Plug 'neovim/nvim-lspconfig'
 
+" typescript goodness
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
-let mapleader=" "
-
-colorscheme everblush
+" theme
+colorscheme nightfox
 let g:airline_theme='deus'
 let g:everblushNR=1
 
 " Fixing some diff related theme stuff
-hi DiffDelete guifg='#e06e6e' guibg='#360b0b'
-hi DiffAdd guifg='#8ccf7e' guibg='#11240d'
-hi DiffChange guifg='#6cd0ca' guibg='#0f312f'
-hi DiffText guifg='#6cd0ca' guibg='#1b5653'
-hi Folded guifg='#c47fd5' guibg='#181f21'
-hi FoldColumn guifg='#c47fd5' guibg='#181f21'
-hi GitGutterAdd guifg='#8ccf7e' 
-hi GitGutterDelete guifg='#e06e6e' 
-hi GitGutterChange guifg='#6cd0ca'
+" hi DiffDelete guifg='#e06e6e' guibg='#360b0b'
+" hi DiffAdd guifg='#8ccf7e' guibg='#11240d'
+" hi DiffChange guifg='#6cd0ca' guibg='#0f312f'
+" hi DiffText guifg='#6cd0ca' guibg='#1b5653'
+" hi Folded guifg='#c47fd5' guibg='#181f21'
+" hi FoldColumn guifg='#c47fd5' guibg='#181f21'
+" hi GitGutterAdd guifg='#8ccf7e'
+" hi GitGutterDelete guifg='#e06e6e'
+" hi GitGutterChange guifg='#6cd0ca'
 
+" basic settings
+let mapleader=" "
 set number
 set ignorecase
 set smartcase
@@ -65,7 +79,7 @@ nnoremap <silent> <c-p> :Files<CR>
 " Find files in repo (uses gitignore to filter)
 nnoremap <silent><leader>p :GFiles<CR>
 " Search in files
-nnoremap <silent><leader>f :Rg<CR>
+nnoremap <silent><leader>sf :Rg<CR>
 " Open buffers
 nnoremap <silent><leader>l :Buffers<CR>
 " Flip to previous file
@@ -81,22 +95,35 @@ nnoremap <silent><leader>r :source $MYVIMRC<CR>
 " View Git status page
 nnoremap <silent><leader>gg :Git<CR>
 " Open changed files preview
-nnoremap <silent><leader>gf :GF?<CR>
+nnoremap <silent><leader>gf :DiffviewOpen<CR>
 " Open diff of current buffer
 nnoremap <silent><leader>gd :Gdiff<CR>
 " Preview hunk
-nnoremap <silent><leader>gh :GitGutterPreviewHunk<CR>
+nnoremap <silent><leader>gh :DiffviewFileHistory<CR>
+
+nnoremap <silent><leader>gp :GitGutterPreviewHunk<CR>
+" Command to replace all in quickfix
+nnoremap <silent><leader>sr :cfdo %s///g \| update
+  \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 " Switch to window 
 nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
+
 " Swap window
 nnoremap <silent><leader>wk :wincmd K<CR>
 nnoremap <silent><leader>wj :wincmd J<CR>
 nnoremap <silent><leader>wh :wincmd H<CR>
 nnoremap <silent><leader>wl :wincmd L<CR>
+
+" Resize window
+nnoremap <silent> <Leader>= :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
+
+" Commands
+:command QT tabclose
 
 " Toggle nerd tree
 nmap <silent><leader>tt :NERDTreeToggle<cr>
@@ -105,6 +132,7 @@ nmap <silent><leader>tf :NERDTreeFind<cr>
 " Reload the file list
 nmap <silent><leader>tr :NERDTreeRefreshRoot<cr>
 
+" Settings for various plugins
 let NERDTreeQuitOnOpen = 1
 let NERDTreeShowHidden=1
 
@@ -123,7 +151,7 @@ let g:gitgutter_sign_modified_removed = '~-'
 " select / deselect all in fzf Rg
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all'
 
-" Begin COC stuff
+" Begin COC stuff (pretty much just copy & pasted)
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
