@@ -27,8 +27,6 @@ Plug 'sindrets/diffview.nvim'
 " commenting lines
 Plug 'chrisbra/vim-commentary'
 
-" lets add a different comment in the same place
-
 " autoformatting
 Plug 'mitermayer/vim-prettier'
 
