@@ -48,6 +48,9 @@ Plug 'neovim/nvim-lspconfig'
 " typescript goodness
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" gql syntax highlighting
+Plug 'jparise/vim-graphql'
+
 call plug#end()
 
 " lua specific stuff
@@ -108,8 +111,8 @@ nnoremap <leader>r :%s///g<Left><Left>
 nnoremap <leader>Rc :cfdo %s///gc \| update<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " replace in current file with confirm
 nnoremap <leader>rc :%s///gc<Left><Left><Left>
-" Open buffers
-nnoremap <silent><leader>b :Buffers<CR>
+" List open buffers
+nnoremap <silent><leader>l :Buffers<CR>
 " Flip to previous file
 nnoremap <silent><leader><tab> :b#<CR>
 " File history
@@ -142,6 +145,8 @@ nnoremap <silent><nowait> <space>c
 tnoremap <Esc> <C-\><C-n>
 " open terminal (shell)
 nnoremap <silent><leader>s :10sp <bar> term<CR>
+" close buffer without closing window
+nnoremap <silent><leader>bd :bp<bar>sp<bar>bn<bar>bd<CR>
 
 " Switch to window 
 nmap <silent> <c-k> :wincmd k<CR>
@@ -168,7 +173,10 @@ nmap <silent><leader>tr :NERDTreeRefreshRoot<cr>
 
 " Commands
 " Refresh config 
- :command Reload source $MYVIMRC
+:command Reload source $MYVIMRC
+" open Diffview with arguments – e.g., :DiffviewOpen origin/development...HEAD
+:command -nargs=* Diff :DiffviewOpen <args>
+:command -nargs=1 DiffBase :DiffviewOpen origin/<args>...HEAD
 
 " Settings for various plugins
 let NERDTreeQuitOnOpen = 1
