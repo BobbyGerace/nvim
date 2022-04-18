@@ -87,6 +87,10 @@ set softtabstop =2
 set shiftwidth  =2
 set expandtab
 set mouse=a
+set splitbelow splitright
+
+" dont show line numbers in terminal
+autocmd TermOpen * setlocal nonumber norelativenumber
 
 " checks for when the file changes and updates
 set autoread
@@ -134,6 +138,10 @@ nnoremap <silent><leader>e :<C-u>CocList diagnostics<cr>
 nnoremap <silent><leader>c :<C-u>CocList commands<cr>
 " Show coc commands.
 nnoremap <silent><nowait> <space>c  
+" Exit terminal mode
+tnoremap <Esc> <C-\><C-n>
+" open terminal (shell)
+nnoremap <silent><leader>s :10sp <bar> term<CR>
 
 " Switch to window 
 nmap <silent> <c-k> :wincmd k<CR>
