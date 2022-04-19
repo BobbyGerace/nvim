@@ -1,5 +1,8 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
+" dependencies
+Plug 'nvim-lua/plenary.nvim'
+
 " themes
 Plug 'sainnhe/sonokai'
 Plug 'sainnhe/everforest'
@@ -10,10 +13,6 @@ Plug 'gosukiwi/vim-atom-dark'
 Plug 'mangeshrex/everblush.vim'
 Plug 'EdenEast/nightfox.nvim'
 
-" fzf
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
 " status bar
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -22,9 +21,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kdheepak/tabline.nvim'
 
 " git stuff
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'nvim-lua/plenary.nvim'
 Plug 'sindrets/diffview.nvim'
 
 " commenting lines
@@ -51,17 +48,41 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " gql syntax highlighting
 Plug 'jparise/vim-graphql'
 
+" file search and grepper
+Plug 'nvim-telescope/telescope.nvim'
+
 call plug#end()
 
 " lua specific stuff
 lua << END
-require('lualine').setup()
+require('lualine').setup({
+  sections = {
+    lualine_c = {'filename', 'g:coc_status'},
+  }
+})
+
 require('tabline').setup({
   options = {
     show_tabs_always = true,
     show_filename_only = true,
   }
 })
+
+local actions = require("telescope.actions")
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      i = {
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        ["<C-a>"] = actions.send_to_qflist + actions.open_qflist,
+      },
+      n = {
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        ["<C-a>"] = actions.send_to_qflist + actions.open_qflist,
+      },
+    }
+  }
+}
 END
 
 " theme
@@ -100,9 +121,9 @@ set autoread
 au CursorHold * checktime
 
 " Find files in project
-nnoremap <silent><leader>p :GFiles<CR>
+nnoremap <silent><leader>p :Telescope find_files<CR>
 " Search in files
-nnoremap <silent><leader>f :Rg<CR>
+nnoremap <silent><leader>f :Telescope live_grep<CR>
 " replace in project (after getting to quickfix window)
 nnoremap <leader>R :cfdo %s///g \| update<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " replace in current file
@@ -112,25 +133,25 @@ nnoremap <leader>Rc :cfdo %s///gc \| update<Left><Left><Left><Left><Left><Left><
 " replace in current file with confirm
 nnoremap <leader>rc :%s///gc<Left><Left><Left>
 " List open buffers
-nnoremap <silent><leader>l :Buffers<CR>
+nnoremap <silent><leader>l :Telescope buffers<CR>
 " Flip to previous file
 nnoremap <silent><leader><tab> :b#<CR>
 " File history
-nnoremap <silent><leader>h :History<CR>
+nnoremap <silent><leader>h :Telescope oldfiles<CR>
 " Copy to clipboard
 nnoremap <silent><leader>y "*y
 " Paste from clipboard
 nnoremap <silent><leader>v "*p
-" View Git status page
-nnoremap <silent><leader>gg :Git<CR>
 " Open changed files preview
-nnoremap <silent><leader>gc :DiffviewOpen<CR>
-" Open diff of current buffer
-nnoremap <silent><leader>gd :Gdiff<CR>
+nnoremap <silent><leader>gd :DiffviewOpen<CR>
 " Show file history
 nnoremap <silent><leader>gh :DiffviewFileHistory<CR>
 " Preview hunk
 nnoremap <silent><leader>gp :GitGutterPreviewHunk<CR>
+" Preview hunk
+nnoremap <silent><leader>gs :Telescope git_status<CR>
+" Preview hunk
+nnoremap <silent><leader>gb :Telescope git_branches<CR>
 " Close tab
 nnoremap <silent><leader>qt :tabclose<CR>
 " Use K to show documentation in preview window.
@@ -199,6 +220,8 @@ set sessionoptions+=tabpages,globals " store tabpages and globals in session
 
 " select / deselect all in fzf Rg
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all'
+
+com! -bar -bang Rg call fzf#vim#grep(<q-args>, fzf#vim#with_preview({'options': '--delimiter=: --nth=4..'}, 'right'), <bang>0)
 
 " use ripgrep as grep tool
 if executable("rg")
@@ -315,11 +338,6 @@ if has('nvim-0.4.0') || has('patch-8.2.0750')
   vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
